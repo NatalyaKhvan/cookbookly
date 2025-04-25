@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   resources :reviews
   resources :favorites
   resources :users
-  resources :ingredient_recipes, only: [:index, :show]
+  resources :ingredient_recipes, only: [ :index, :show ]
 
   get "/dashboard", to: "dashboard#index"
 
