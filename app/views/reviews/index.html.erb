@@ -1,0 +1,9 @@
+<h1>Reviews</h1>
+<ul>
+  <% @reviews.each do |review| %>
+    <li>
+      <%= link_to "Review for #{review.recipe.title}", review_path(review) %>
+      - <%= review.rating %> stars
+    </li>
+  <% end %>
+</ul>

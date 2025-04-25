@@ -1,0 +1,10 @@
+<h1>Ingredient Usages</h1>
+<ul>
+  <% @ingredient_recipes.each do |ir| %>
+    <li>
+      <%= ir.quantity %> <%= ir.unit %> of
+      <%= link_to ir.ingredient.name, ingredient_path(ir.ingredient) %>
+      in <%= link_to ir.recipe.title, recipe_path(ir.recipe) %>
+    </li>
+  <% end %>
+</ul>
