@@ -1,0 +1,6 @@
+<h1>Ingredient in Recipe</h1>
+<p>
+  <%= @ingredient_recipe.quantity %> <%= @ingredient_recipe.unit %> of
+  <%= @ingredient_recipe.ingredient.name %> used in
+  <%= link_to @ingredient_recipe.recipe.title, recipe_path(@ingredient_recipe.recipe) %>
+</p>
