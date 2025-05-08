@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe "Recipes", type: :request do
-  let!(:user) { User.create(username: "testuser", email: "test@example.com") }
-  let!(:category) { Category.create(name: "Desserts") }
+  let!(:user) { User.create!(username: "testuser", email: "test@example.com") }
+  let!(:category) { Category.create!(name: "Desserts") }
   let!(:recipe) { Recipe.create!(title: "Chocolate Cake",
   instructions: "Mix and bake.",
   user: user) }

@@ -11,7 +11,7 @@ class ReviewsController < ApplicationController
 
   def create
     @review = @recipe.reviews.new(review_params)
-    @review.user = User.first  # Explicitly set user to User.first for now
+    @review.user = User.first  # Assign user manually for now
 
     if @review.save
       redirect_to recipe_reviews_path(@recipe, @review), notice: "Review was successfully created."

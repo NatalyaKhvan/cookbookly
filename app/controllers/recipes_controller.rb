@@ -18,7 +18,7 @@ class RecipesController < ApplicationController
 
   def create
     @recipe = Recipe.new(recipe_params)
-    @recipe.user = User.first # assign user manually for now
+    @recipe.user = User.first # Assign user manually for now
     @categories = Category.all
     if @recipe.save
       redirect_to @recipe, notice: "Recipe was successfully created."

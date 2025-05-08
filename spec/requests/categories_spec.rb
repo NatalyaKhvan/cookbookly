@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "Categories", type: :request do
-  let!(:category) { Category.create(name: "Desserts") }
+  let!(:category) { Category.create!(name: "Desserts") }
 
   describe "GET /categories" do
     it "returns a list of categories" do

@@ -4,7 +4,7 @@ RSpec.describe "Ingredients", type: :request do
   let!(:ingredient) { Ingredient.create!(name: "Sugar") }
 
   describe "GET /ingredients" do
-    it "returns a successful response and includes ingredient name" do
+    it "returns a successful response" do
       get ingredients_path
       expect(response).to have_http_status(:ok)
       expect(response.body).to include("Sugar")
@@ -13,7 +13,7 @@ RSpec.describe "Ingredients", type: :request do
 
   describe "GET /ingredients/:id" do
     context "when ingredient exists" do
-      it "returns the ingredient" do
+      it "shows the ingredient" do
         get ingredient_path(ingredient)
         expect(response).to have_http_status(:ok)
         expect(response.body).to include("Sugar")

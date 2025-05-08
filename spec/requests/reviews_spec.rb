@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe "Reviews", type: :request do
-  let!(:user) { User.create(username: "testuser", email: "test@example.com") }
-  let!(:recipe) { Recipe.create(title: "Chocolate Cake", instructions: "Mix and bake.", user: user) }
+  let!(:user) { User.create!(username: "testuser", email: "test@example.com") }
+  let!(:recipe) { Recipe.create!(title: "Chocolate Cake", instructions: "Mix and bake.", user: user) }
   let!(:review) { Review.create!(content: "Great!", rating: 5, user: user, recipe: recipe) }
 
   describe "GET /recipes/:recipe_id/reviews" do
