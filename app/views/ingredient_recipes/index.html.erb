@@ -1,10 +1,20 @@
 <h1>Ingredient Usages</h1>
+
+<%= link_to "Add Ingredient Usage", new_ingredient_recipe_path %>
+
 <ul>
-  <% @ingredient_recipes.each do |ir| %>
-    <li>
-      <%= ir.quantity %> <%= ir.unit %> of
-      <%= link_to ir.ingredient.name, ingredient_path(ir.ingredient) %>
-      in <%= link_to ir.recipe.title, recipe_path(ir.recipe) %>
-    </li>
+  <% if @ingredient_recipes.present? %>  <!-- Check if ingredient recipes exist -->
+    <% @ingredient_recipes.each do |ir| %>
+      <li>
+        <%= ir.quantity %> <%= ir.unit %> of
+        <%= link_to ir.ingredient.name, ingredient_path(ir.ingredient) %>
+        in <%= link_to ir.recipe.title, recipe_path(ir.recipe) %>
+        –
+        <%= link_to "Edit", edit_ingredient_recipe_path(ir) %> |
+        <%= link_to "Delete", ingredient_recipe_path(ir), method: :delete, data: { confirm: "Are you sure?" } %>
+      </li>
+    <% end %>
+  <% else %>
+    <p>No ingredient usages available.</p>  <!-- Handle case where no ingredient recipes exist -->
   <% end %>
 </ul>

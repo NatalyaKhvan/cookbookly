@@ -1,0 +1,37 @@
+<%= form_with(model: ingredient_recipe, local: true) do |form| %>
+    <% if ingredient_recipe.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(ingredient_recipe.errors.count, "error") %> Please correct the following errors:</h2>
+        <ul>
+          <% ingredient_recipe.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+  
+    <div>
+      <%= form.label :ingredient_id %><br>
+      <%= form.collection_select :ingredient_id, Ingredient.all, :id, :name, prompt: "Select Ingredient" %>
+    </div>
+  
+    <div>
+      <%= form.label :recipe_id %><br>
+      <%= form.collection_select :recipe_id, Recipe.all, :id, :title, prompt: "Select Recipe" %>
+    </div>
+  
+    <div>
+      <%= form.label :quantity %><br>
+      <%= form.number_field :quantity, step: 0.01 %>
+    </div>
+  
+    <div>
+      <%= form.label :unit %><br>
+      <%= form.text_field :unit %>
+    </div>
+  
+    <div>
+      <%= form.submit %>
+    </div>
+  <% end %>
+  

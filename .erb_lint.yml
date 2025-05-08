@@ -1,0 +1,7 @@
+linters:
+  FinalNewline:
+    enabled: true
+  SpaceAroundErbTag:
+    enabled: true
+  TagIndent:
+    enabled: true
