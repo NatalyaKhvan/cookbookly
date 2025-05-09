@@ -31,7 +31,7 @@ RSpec.describe "IngredientRecipes", type: :request do
   end
 
   describe "GET /ingredient_recipes/:id" do
-    it "returns the ingredient_recipe" do
+    it "shows a single ingredient_recipe" do
       get ingredient_recipe_path(ingredient_recipe)
       expect(response).to have_http_status(200)
       expect(response.body).to include("2.0 cups of")

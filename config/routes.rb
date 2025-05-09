@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   resources :ingredients
   resources :favorites
   resources :users
-  resources :ingredient_recipes  # This will include all actions (index, show, create, update, destroy)
+  resources :ingredient_recipes
 
   get "/dashboard", to: "dashboard#index"
 

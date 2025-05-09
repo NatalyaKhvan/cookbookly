@@ -13,7 +13,7 @@ RSpec.describe "Favorites", type: :request do
   end
 
   describe "GET /favorites/:id" do
-    it "shows the favorite" do
+    it "shows a favorite" do
       get favorite_path(favorite)
       expect(response).to have_http_status(200)
       expect(response.body).to include(favorite.recipe.title)
