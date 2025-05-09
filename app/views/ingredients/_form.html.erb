@@ -1,0 +1,22 @@
+<%= form_with(model: ingredient, local: true) do |form| %>
+    <% if ingredient.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(ingredient.errors.count, "error") %> Please correct the following errors:</h2>
+        <ul>
+          <% ingredient.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+  
+    <div>
+      <%= form.label :name %>
+      <%= form.text_field :name %>
+    </div>
+  
+    <div>
+      <%= form.submit %>
+    </div>
+<% end %>
+  

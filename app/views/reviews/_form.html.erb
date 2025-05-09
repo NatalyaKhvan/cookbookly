@@ -1,0 +1,15 @@
+<%= form_with model: review, url: review.new_record? ? recipe_reviews_path(review.recipe) : recipe_review_path(review.recipe, review), method: review.new_record? ? :post : :patch do |form| %>
+  <div>
+    <%= form.label :rating %>
+    <%= form.number_field :rating %>
+  </div>
+
+  <div>
+    <%= form.label :content %>
+    <%= form.text_area :content %>
+  </div>
+
+  <div>
+    <%= form.submit review.new_record? ? "Create Review" : "Update Review" %>
+  </div>
+<% end %>
