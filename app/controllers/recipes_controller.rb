@@ -37,7 +37,7 @@ class RecipesController < ApplicationController
     @categories = Category.all
     if @recipe&.update(recipe_params)
       redirect_to @recipe, notice: "Recipe was successfully updated."
-    elsif @recipe
+    else @recipe
       render :edit, status: :unprocessable_entity
     end
   end

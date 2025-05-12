@@ -14,7 +14,7 @@ class FavoritesController < ApplicationController
   def new
     @favorite = Favorite.new
     @recipes = Recipe.all
-    @users = User.all
+    @user = User.first # Assign user manually for now
   end
 
   def create
