@@ -23,7 +23,7 @@
     <%= stylesheet_link_tag :application, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
-   
+
   <body>
     <nav>
       <%= link_to "Home", root_path %> |
@@ -33,6 +33,15 @@
         | <%= link_to "Dashboard", dashboard_path %>
       <% end %>
     </nav>
+
+    <% if notice %>
+      <div class="flash notice"><%= notice %></div>
+    <% end %>
+
+    <% if alert %>
+      <div class="flash alert"><%= alert %></div>
+    <% end %>
+    
     <%= yield %>
   </body>
 </html>

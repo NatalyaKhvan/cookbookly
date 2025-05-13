@@ -1,6 +1,15 @@
 <h1>Ingredients</h1>
+
+<%= link_to "New Ingredient", new_ingredient_path %>
+
 <ul>
   <% @ingredients.each do |ingredient| %>
-    <li><%= link_to ingredient.name, ingredient_path(ingredient) %></li>
+    <li>
+      <%= link_to ingredient.name, ingredient_path(ingredient) %>
+      |
+      <%= link_to "Edit", edit_ingredient_path(ingredient) %>
+      |
+      <%= link_to "Delete", ingredient_path(ingredient), method: :delete, data: { confirm: "Are you sure?" } %>
+    </li>
   <% end %>
 </ul>

@@ -1,13 +1,14 @@
 Rails.application.routes.draw do
   root "home#index"
 
-  resources :recipes
+  resources :recipes do
+    resources :reviews
+  end
   resources :categories
   resources :ingredients
-  resources :reviews
   resources :favorites
   resources :users
-  resources :ingredient_recipes, only: [ :index, :show ]
+  resources :ingredient_recipes
 
   get "/dashboard", to: "dashboard#index"
 

@@ -2,3 +2,19 @@
 <p>Explore tasty recipes, favorite your finds, and share your own.</p>
 
 <%= link_to "Browse Recipes", recipes_path %>
+
+<% if user_signed_in? %>
+  <p>Welcome back, <%= current_user.username %>!</p>
+  <%= link_to "Go to your Dashboard", dashboard_path %> | 
+  <%= link_to "Log out", destroy_user_session_path, method: :delete %>
+<% else %>
+  <p>Not a member yet? <%= link_to "Sign up", new_user_registration_path %> or <%= link_to "Log in", new_user_session_path %>.</p>
+<% end %>
+
+<h2>Featured Recipes</h2>
+<% @recipes.each do |recipe| %>
+  <div>
+    <%= link_to recipe.title, recipe_path(recipe) %>
+    <p><%= recipe.instructions.truncate(100) %></p>
+  </div>
+<% end %>

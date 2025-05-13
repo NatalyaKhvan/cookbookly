@@ -1,2 +1,7 @@
-<h1>Favorited: <%= @favorite.recipe.title %></h1>
-<p>By user: <%= @favorite.user.username %></p>
+<h1>Favorited Recipe: <%= @favorite.recipe.title %></h1>
+<p>Favorited by: <%= @favorite.user.username %></p>
+
+<h2>Recipe Details:</h2>
+<p><%= @favorite.recipe.instructions %></p>
+
+<%= link_to 'Back to Favorites', favorites_path %>

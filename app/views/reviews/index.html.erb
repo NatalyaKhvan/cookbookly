@@ -2,8 +2,9 @@
 <ul>
   <% @reviews.each do |review| %>
     <li>
-      <%= link_to "Review for #{review.recipe.title}", review_path(review) %>
+      <%= link_to "Review for #{review.recipe.title}", recipe_review_path(review.recipe, review) %>
       - <%= review.rating %> stars
+      - <%= review.content %>
     </li>
   <% end %>
 </ul>
