@@ -1,19 +1,20 @@
-<h1>Ingredient Usage Details</h1>
+<div class="page-container">
+  <h1 class="page-title">Ingredient Usage Details</h1>
 
-<p>
-  <strong>Ingredient:</strong>
-  <%= link_to @ingredient_recipe.ingredient.name, ingredient_path(@ingredient_recipe.ingredient) %>
-</p>
+  <p><strong>Ingredient:</strong>
+    <%= link_to @ingredient_recipe.ingredient.name, ingredient_path(@ingredient_recipe.ingredient), class: "btn-link" %>
+  </p>
 
-<p>
-  <strong>Recipe:</strong>
-  <%= link_to @ingredient_recipe.recipe.title, recipe_path(@ingredient_recipe.recipe) %>
-</p>
+  <p><strong>Recipe:</strong>
+    <%= link_to @ingredient_recipe.recipe.title, recipe_path(@ingredient_recipe.recipe), class: "btn-link" %>
+  </p>
 
-<p>
-  <strong>Quantity:</strong>
-  <%= "#{@ingredient_recipe.quantity} #{@ingredient_recipe.unit} of #{@ingredient_recipe.ingredient.name}" %>
-</p>
+  <p><strong>Quantity:</strong>
+    <%= "#{@ingredient_recipe.quantity} #{@ingredient_recipe.unit} of #{@ingredient_recipe.ingredient.name}" %>
+  </p>
 
-<%= link_to "Edit", edit_ingredient_recipe_path(@ingredient_recipe) %> |
-<%= link_to "Back", ingredient_recipes_path %>
+  <div class="button-row">
+    <%= link_to "Edit", edit_ingredient_recipe_path(@ingredient_recipe), class: "btn-link" %>
+    <%= link_to "Back", ingredient_recipes_path, class: "btn-link" %>
+  </div>
+</div>

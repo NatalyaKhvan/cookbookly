@@ -1,25 +1,23 @@
 class RecipesController < ApplicationController
+  before_action :require_login
   before_action :set_recipe, only: [ :show, :edit, :update, :destroy ]
+  before_action :set_categories, only: [ :new, :edit, :create, :update ]
+  before_action :authorize_user!, only: [ :edit, :update, :destroy ]
 
   def index
     @recipes = Recipe.all
   end
 
   def show
-    if @recipe
-      @reviews = @recipe.reviews
-    end
+    @reviews = @recipe.reviews.includes(:user)
   end
 
   def new
     @recipe = Recipe.new
-    @categories = Category.all
   end
 
   def create
-    @recipe = Recipe.new(recipe_params)
-    @recipe.user = User.first # Assign user manually for now
-    @categories = Category.all
+    @recipe = current_user.recipes.build(recipe_params)
     if @recipe.save
       redirect_to @recipe, notice: "Recipe was successfully created."
     else
@@ -28,27 +26,19 @@ class RecipesController < ApplicationController
   end
 
   def edit
-    if @recipe
-      @categories = Category.all
-    end
   end
 
   def update
-    @categories = Category.all
-    if @recipe&.update(recipe_params)
+    if @recipe.update(recipe_params)
       redirect_to @recipe, notice: "Recipe was successfully updated."
-    else @recipe
+    else
       render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
-    if @recipe && @recipe.user == User.first
-      @recipe.destroy
-      redirect_to recipes_path, notice: "Recipe was successfully deleted."
-    else
-      redirect_to recipes_path, alert: "Recipe not found or you do not have permission to delete it."
-    end
+    @recipe.destroy
+    redirect_to recipes_path, notice: "Recipe was successfully deleted."
   end
 
   private
@@ -57,7 +47,17 @@ class RecipesController < ApplicationController
     @recipe = Recipe.find(params[:id])
   end
 
+  def set_categories
+    @categories = Category.all
+  end
+
   def recipe_params
     params.require(:recipe).permit(:title, :instructions, category_ids: [])
+  end
+
+  def authorize_user!
+    unless @recipe.user == current_user
+      redirect_to recipes_path, alert: "You do not have permission to modify this recipe."
+    end
   end
 end

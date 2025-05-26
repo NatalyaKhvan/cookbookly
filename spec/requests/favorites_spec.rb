@@ -1,14 +1,19 @@
 require 'rails_helper'
 
 RSpec.describe "Favorites", type: :request do
-  let!(:user) { User.create!(username: "testuser", email: "test@example.com") }
+  let!(:user) { User.create!(username: "testuser", email: "test@example.com", password: "password") }
   let!(:recipe) { Recipe.create!(title: "Test Recipe", instructions: "Do this.", user: user) }
   let!(:favorite) { Favorite.create!(user: user, recipe: recipe) }
+
+  before do
+    post login_path, params: { email: user.email, password: "password" }
+  end
 
   describe "GET /favorites" do
     it "returns a successful response and lists favorites" do
       get favorites_path
       expect(response).to have_http_status(200)
+      expect(response.body).to include("Test Recipe")
     end
   end
 
@@ -36,7 +41,7 @@ RSpec.describe "Favorites", type: :request do
   describe "POST /favorites" do
     it "creates a new favorite" do
       expect {
-        post favorites_path, params: { favorite: { user_id: user.id, recipe_id: recipe.id } }
+        post favorites_path, params: { favorite: { recipe_id: recipe.id } }
       }.to change(Favorite, :count).by(1)
       expect(response).to redirect_to(favorite_path(Favorite.last))
     end
@@ -51,9 +56,9 @@ RSpec.describe "Favorites", type: :request do
 
   describe "PATCH /favorites/:id" do
     it "updates an existing favorite" do
-      patch favorite_path(favorite), params: { favorite: { user_id: user.id, recipe_id: recipe.id } }
+      patch favorite_path(favorite), params: { favorite: { recipe_id: recipe.id } }
       favorite.reload
-      expect(favorite.user_id).to eq(user.id)
+      expect(favorite.recipe_id).to eq(recipe.id)
       expect(response).to redirect_to(favorite_path(favorite))
     end
   end

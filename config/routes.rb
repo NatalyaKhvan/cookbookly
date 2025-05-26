@@ -1,16 +1,28 @@
 Rails.application.routes.draw do
+  # Root path
   root "home#index"
 
+  # Authentication routes
+  get "/login", to: "sessions#new", as: :login
+  post "/login", to: "sessions#create"
+  delete "/logout", to: "sessions#destroy", as: :logout
+
+  # Dashboard
+  get "/dashboard", to: "dashboard#index"
+
+  # Users
+  resources :users
+
+  # Recipes and nested reviews
   resources :recipes do
     resources :reviews
   end
+
+  # Other resources
   resources :categories
   resources :ingredients
   resources :favorites
-  resources :users
   resources :ingredient_recipes
-
-  get "/dashboard", to: "dashboard#index"
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   get "up" => "rails/health#show", as: :rails_health_check

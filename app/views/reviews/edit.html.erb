@@ -1,7 +1,9 @@
-<h1>Review for <%= @review.recipe.title %></h1>
-<p><strong>Rating:</strong> <%= @review.rating %> stars</p>
-<p><%= @review.content %></p>
+<div class="page-container">
+  <h1 class="page-title">Edit Review for <%= @review.recipe.title %></h1>
 
-<%= link_to "Edit", edit_recipe_review_path(@review.recipe, @review) %> |
-<%= link_to "Delete", recipe_review_path(@review.recipe, @review), method: :delete, data: { confirm: "Are you sure?" } %> |
-<%= link_to "Back to Recipe", recipe_path(@review.recipe) %>
+  <%= render "form", review: @review %>
+
+  <div class="button-row">
+    <%= link_to "Back to Recipe", recipe_path(@review.recipe), class: "btn-link" %>
+  </div>
+</div>

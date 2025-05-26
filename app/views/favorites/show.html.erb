@@ -1,7 +1,15 @@
-<h1>Favorited Recipe: <%= @favorite.recipe.title %></h1>
-<p>Favorited by: <%= @favorite.user.username %></p>
+<div class="page-container favorite-detail">
+  <h1 class="page-title">Favorited Recipe: <%= @favorite.recipe.title %></h1>
+  <p><strong>By:</strong> <%= @favorite.recipe.user.username %></p>
 
-<h2>Recipe Details:</h2>
-<p><%= @favorite.recipe.instructions %></p>
+  <h2>Instructions</h2>
+  <p><%= @favorite.recipe.instructions %></p>
 
-<%= link_to 'Back to Favorites', favorites_path %>
+  <div class="button-row">
+    <% if @favorite.user == current_user %>
+      <%= link_to "Edit Favorite", edit_favorite_path(@favorite), class: "btn-link" %>
+      <%= link_to "Delete Favorite", favorite_path(@favorite), method: :delete, data: { confirm: "Are you sure?" }, class: "btn-danger" %>
+    <% end %>
+    <%= link_to "Back to Favorites", favorites_path, class: "btn-link" %>
+  </div>
+</div>

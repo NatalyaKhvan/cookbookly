@@ -9,12 +9,20 @@ class ReviewsController < ApplicationController
   def show
   end
 
+  def new
+    @review = @recipe.reviews.new
+  end
+
+  def edit
+    @review = @recipe.reviews.find(params[:id])
+  end
+
   def create
     @review = @recipe.reviews.new(review_params)
-    @review.user = User.first  # Assign user manually for now
+    @review.user = current_user
 
     if @review.save
-      redirect_to recipe_reviews_path(@recipe, @review), notice: "Review was successfully created."
+      redirect_to recipe_review_path(@recipe, @review), notice: "Review was successfully created."
     else
       render :new
     end

@@ -1,24 +1,7 @@
-<h1>Edit Category</h1>
-<%= form_with(model: @category, local: true) do |form| %>
-  <% if @category.errors.any? %>
-    <div id="error_explanation">
-      <h2>Please fix the <%= pluralize(@category.errors.count, "error") %> below:</h2>
-      <ul>
-        <% @category.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+<div class="page-container">
+  <h1 class="page-title">Edit Category</h1>
 
-  <div>
-    <%= form.label :name %>
-    <%= form.text_field :name %>
-  </div>
+  <%= render "form", category: @category %>
 
-  <div>
-    <%= form.submit "Update Category" %>
-  </div>
-<% end %>
-
-<%= link_to 'Back', category_path(@category) %>
+  <%= link_to "Back to Categories", categories_path, class: "btn-link" %>
+</div>
