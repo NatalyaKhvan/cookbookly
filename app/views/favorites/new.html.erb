@@ -1,30 +1,9 @@
-<h1>New Favorite</h1>
+<div class="page-container">
+  <h1 class="page-title">New Favorite</h1>
 
-<%= form_with model: @favorite, local: true do |form| %>
-  <% if @favorite.errors.any? %>
-    <div id="error_explanation">
-      <h2>Please fix the <%= pluralize(@favorite.errors.count, "error") %> below:</h2>
-      <ul>
-        <% @favorite.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <%= render "form", favorite: @favorite, recipes: @recipes %>
 
-  <div class="field">
-    <%= form.label :user_id %>
-    <%= form.collection_select :user_id, @users, :id, :username, prompt: "Select a user" %>
+  <div class="button-row">
+    <%= link_to "Back to Favorites", favorites_path, class: "btn-link" %>
   </div>
-
-  <div class="field">
-    <%= form.label :recipe_id %>
-    <%= form.collection_select :recipe_id, @recipes, :id, :title, prompt: "Select a recipe" %>
-  </div>
-
-  <div class="actions">
-    <%= form.submit %>
-  </div>
-<% end %>
-
-<%= link_to 'Back to Favorites', favorites_path %>
+</div>

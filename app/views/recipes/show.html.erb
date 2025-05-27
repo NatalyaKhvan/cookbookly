@@ -1,27 +1,50 @@
-<h1><%= @recipe.title %></h1>
-<p><%= @recipe.instructions %></p>
+<div class="page-container recipe-detail">
+  <h1 class="page-title"><%= @recipe.title %></h1>
+  <p>By: <%= @recipe.user.username %></p>
+  <p><%= @recipe.instructions %></p>
 
-<h3>Categories:</h3>
-<ul>
-  <% @recipe.categories.each do |category| %>
-    <li><%= category.name %></li>
-  <% end %>
-</ul>
-
-<h2>Reviews</h2>
-<% @reviews.each do |review| %>
-  <div>
-    <p>Rating: <%= review.rating %></p>
-    <p><%= review.content %></p>
-
-    <% if review.user == User.first %> <!-- Replace with current_user later -->
-      <%= link_to "Edit", edit_recipe_review_path(@recipe, review) %> |
-      <%= link_to "Delete", recipe_review_path(@recipe, review), method: :delete, data: { confirm: "Are you sure?" } %>
+  <h3>Categories:</h3>
+  <ul class="category-list">
+    <% @recipe.categories.each do |category| %>
+      <li><%= category.name %></li>
     <% end %>
-  </div>
-<% end %>
+  </ul>
 
-<%= link_to "Add Review", new_recipe_review_path(@recipe) %>
-<%= link_to "Edit Recipe", edit_recipe_path(@recipe) %>  <!-- Link to the edit page -->
-<%= link_to "Back", recipes_path %>  <!-- Link back to the list of recipes -->
-<%= link_to "Delete Recipe", recipe_path(@recipe), method: :delete, data: { confirm: "Are you sure?" } %>
+  <% if current_user %>
+    <% if current_user.favorites.exists?(recipe_id: @recipe.id) %>
+      <%= link_to "Remove from Favorites", favorite_path(current_user.favorites.find_by(recipe_id: @recipe.id)), method: :delete, data: { confirm: "Remove from favorites?" }, class: "btn-link" %>
+    <% else %>
+      <%= link_to "Add to Favorites", favorites_path(recipe_id: @recipe.id), method: :post, class: "btn-link" %>
+    <% end %>
+  <% end %>
+
+  <% if @recipe.user == current_user %>
+    <div class="button-row">
+      <%= link_to "Edit Recipe", edit_recipe_path(@recipe), class: "btn-link" %>
+      <%= link_to "Delete Recipe", recipe_path(@recipe), method: :delete, data: { confirm: "Are you sure?" }, class: "btn-danger" %>
+    </div>
+  <% end %>
+
+  <div class="reviews-section">
+    <h2>Reviews</h2>
+    <% if @reviews.any? %>
+      <% @reviews.each do |review| %>
+        <div class="review-card">
+          <p><strong>Rating:</strong> <%= review.rating %></p>
+          <p><%= review.content %></p>
+
+          <% if review.user == current_user %>
+            <%= link_to "Edit", edit_recipe_review_path(@recipe, review), class: "btn-link" %>
+            <%= link_to "Delete", recipe_review_path(@recipe, review), method: :delete, data: { confirm: "Are you sure?" }, class: "btn-link" %>
+          <% end %>
+        </div>
+      <% end %>
+    <% else %>
+      <p>No reviews yet. Be the first to add one!</p>
+    <% end %>
+
+    <%= link_to "Add a Review", new_recipe_review_path(@recipe), class: "btn-primary" %>
+  </div>
+
+  <%= link_to "Back", recipes_path, class: "btn-link" %>
+</div>

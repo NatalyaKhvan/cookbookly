@@ -2,7 +2,7 @@ class FavoritesController < ApplicationController
   before_action :set_favorite, only: [ :show, :edit, :update, :destroy ]
 
   def index
-    @favorites = Favorite.all
+    @favorites = current_user.favorites
   end
 
   def show
@@ -16,33 +16,31 @@ class FavoritesController < ApplicationController
 
   def create
     @favorite = Favorite.new(favorite_params)
-    @favorite.user = User.first # Assign user manually for now
+    @favorite.user = current_user
     if @favorite.save
       redirect_to @favorite, notice: "Favorite was successfully created."
     else
+      set_form_data
       render :new, status: :unprocessable_entity
     end
   end
 
   def edit
-    set_form_data if @favorite
+    set_form_data
   end
 
   def update
-    if @favorite&.update(favorite_params)
+    if @favorite.update(favorite_params)
       redirect_to @favorite, notice: "Favorite was successfully updated."
-    elsif @favorite
+    else
+      set_form_data
       render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
-    if @favorite
-      @favorite.destroy
-      redirect_to favorites_path, notice: "Favorite was successfully deleted."
-    else
-      redirect_to favorites_path, alert: "Favorite not found."
-    end
+    @favorite.destroy
+    redirect_to favorites_path, notice: "Favorite was successfully deleted."
   end
 
   private
@@ -53,10 +51,9 @@ class FavoritesController < ApplicationController
 
   def set_form_data
     @recipes = Recipe.all
-    @users = User.all
   end
 
   def favorite_params
-    params.require(:favorite).permit(:user_id, :recipe_id)
+    params.require(:favorite).permit(:recipe_id)
   end
 end

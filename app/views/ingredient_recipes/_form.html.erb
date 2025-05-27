@@ -1,37 +1,29 @@
-<%= form_with(model: ingredient_recipe, local: true) do |form| %>
-    <% if ingredient_recipe.errors.any? %>
-      <div id="error_explanation">
-        <h2><%= pluralize(ingredient_recipe.errors.count, "error") %> Please correct the following errors:</h2>
-        <ul>
-          <% ingredient_recipe.errors.full_messages.each do |message| %>
-            <li><%= message %></li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
-  
-    <div>
-      <%= form.label :ingredient_id %><br>
-      <%= form.collection_select :ingredient_id, Ingredient.all, :id, :name, prompt: "Select Ingredient" %>
+<div class="form-container">
+  <%= form_with(model: ingredient_recipe, local: true) do |form| %>
+    <%= render 'shared/form_errors', object: ingredient_recipe %>
+
+    <div class="form-group">
+      <%= form.label :ingredient_id %>
+      <%= form.collection_select :ingredient_id, @ingredients, :id, :name, prompt: "Select Ingredient", class: "form-control" %>
     </div>
-  
-    <div>
-      <%= form.label :recipe_id %><br>
-      <%= form.collection_select :recipe_id, Recipe.all, :id, :title, prompt: "Select Recipe" %>
+
+    <div class="form-group">
+      <%= form.label :recipe_id %>
+      <%= form.collection_select :recipe_id, @recipes, :id, :title, prompt: "Select Recipe", class: "form-control" %>
     </div>
-  
-    <div>
-      <%= form.label :quantity %><br>
-      <%= form.number_field :quantity, step: 0.01 %>
+
+    <div class="form-group">
+      <%= form.label :quantity %>
+      <%= form.number_field :quantity, step: 0.01, class: "form-control" %>
     </div>
-  
-    <div>
-      <%= form.label :unit %><br>
-      <%= form.text_field :unit %>
+
+    <div class="form-group">
+      <%= form.label :unit %>
+      <%= form.text_field :unit, class: "form-control" %>
     </div>
-  
-    <div>
-      <%= form.submit %>
+
+    <div class="form-group">
+      <%= form.submit(ingredient_recipe.persisted? ? "Update Ingredient Entry" : "Add Ingredient", class: "btn-primary") %>
     </div>
   <% end %>
-  
+</div>

@@ -1,7 +1,21 @@
-<h1><%= @ingredient.name %></h1>
-<p>Used in:</p>
-<ul>
-  <% @ingredient.recipes.each do |recipe| %>
-    <li><%= link_to recipe.title, recipe_path(recipe) %></li>
+<div class="page-container ingredient-detail">
+  <h1 class="page-title"><%= @ingredient.name %></h1>
+
+  <h2>Used in:</h2>
+  <% if @ingredient.recipes.any? %>
+    <ul class="recipe-list">
+      <% @ingredient.recipes.each do |recipe| %>
+        <li class="recipe-item">
+          <%= link_to recipe.title, recipe_path(recipe), class: "recipe-link" %>
+          <small>By: <%= recipe.user.username %></small>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>This ingredient hasn’t been used in any recipes yet.</p>
   <% end %>
-</ul>
+
+  <div class="button-row">
+    <%= link_to "Back to Ingredients", ingredients_path, class: "btn-link" %>
+  </div>
+</div>

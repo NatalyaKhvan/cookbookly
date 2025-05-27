@@ -1,5 +1,5 @@
 class CategoriesController < ApplicationController
-  before_action :set_category, only: [ :show, :update, :destroy ]
+  before_action :set_category, only: [ :show, :edit, :update, :destroy ]
 
   def index
     @categories = Category.all
@@ -9,12 +9,20 @@ class CategoriesController < ApplicationController
     @recipes = @category.recipes
   end
 
+  def new
+    @category = Category.new
+  end
+
+  def edit
+    # @category is already set by before_action
+  end
+
   def create
     @category = Category.new(category_params)
     if @category.save
       redirect_to @category, notice: "Category was successfully created."
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 

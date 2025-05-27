@@ -45,7 +45,7 @@ RSpec.describe "Categories", type: :request do
         expect {
           post categories_path, params: { category: { name: "" } }
         }.not_to change(Category, :count)
-        expect(response).to have_http_status(:ok)
+        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
   end

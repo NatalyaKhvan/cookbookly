@@ -1,10 +1,28 @@
-<h1>Reviews</h1>
-<ul>
-  <% @reviews.each do |review| %>
-    <li>
-      <%= link_to "Review for #{review.recipe.title}", recipe_review_path(review.recipe, review) %>
-      - <%= review.rating %> stars
-      - <%= review.content %>
-    </li>
+<div class="page-container">
+  <h1> class="page-title">Reviews for <%= @recipe.title %></h1>
+
+  <div class="button-row">
+    <%= link_to "Write a Review", new_recipe_review_path(@recipe), class: "btn-primary" %>
+    <%= link_to "Back to Recipe", recipe_path(@recipe), class: "btn-link" %>
+  </div>
+
+  <% if @reviews.any? %>
+    <ul class="item-list">
+      <% @reviews.each do |review| %>
+        <li class="item item--review">
+          <strong><%= pluralize(review.rating, "star") %>:</strong>
+          <%= truncate(review.content, length: 100) %>
+          
+          <small>Reviewed by: <%= review.user.username %></small>
+          <div class="button-row">
+            <%= link_to "View", recipe_review_path(@recipe, review), class: "btn-link" %>
+            <%= link_to "Edit", edit_recipe_review_path(@recipe, review), class: "btn-link" %>
+            <%= link_to "Delete", recipe_review_path(@recipe, review), method: :delete, data: { confirm: "Are you sure?" }, class: "btn-danger" %>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>You haven’t added any reviews yet.</p>
   <% end %>
-</ul>
+</div>

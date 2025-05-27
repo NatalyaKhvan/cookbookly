@@ -1,0 +1,14 @@
+<div class="form-container">
+  <%= form_with model: favorite, local: true do |form| %>
+    <%= render 'shared/form_errors', object: favorite %>
+
+    <div class="form-group">
+      <%= form.label :recipe_id, "Select Recipe" %><br>
+      <%= form.collection_select :recipe_id, @recipes, :id, :title, prompt: "Select a recipe", class: "form-control" %>
+    </div>
+
+    <div class="form-group">
+      <%= form.submit "Save Favorite", class: "btn-primary" %>
+    </div>
+  <% end %>
+</div>

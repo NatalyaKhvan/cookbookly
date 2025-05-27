@@ -1,15 +1,19 @@
 require 'rails_helper'
 
 RSpec.describe "Reviews", type: :request do
-  let!(:user) { User.create!(username: "testuser", email: "test@example.com") }
+  let!(:user) { User.create!(username: "testuser", email: "test@example.com", password: "password") }
   let!(:recipe) { Recipe.create!(title: "Chocolate Cake", instructions: "Mix and bake.", user: user) }
-  let!(:review) { Review.create!(content: "Great!", rating: 5, user: user, recipe: recipe) }
+  let!(:review) { Review.create(content: "Great recipe!", rating: 5, recipe: recipe, user: user) }
+
+  before do
+    post login_path, params: { email: user.email, password: "password" }
+  end
 
   describe "GET /recipes/:recipe_id/reviews" do
     it "returns a successful response and lists reviews" do
       get recipe_reviews_path(recipe)
       expect(response).to have_http_status(200)
-      expect(response.body).to include("Review for Chocolate Cake")
+      expect(response.body).to include("Great recipe!")
       expect(response.body).to include("5 stars")
     end
   end
@@ -36,13 +40,13 @@ RSpec.describe "Reviews", type: :request do
         expect {
           post recipe_reviews_path(recipe), params: {
             review: {
-              content: "Great recipe!",
-              rating: 5
+              content: "Delicious!",
+              rating: 4
             }
           }
         }.to change { Review.count }.by(1)
 
-        expect(response).to redirect_to(recipe_reviews_path(recipe, Review.last))
+        expect(response).to redirect_to(recipe_review_path(recipe, Review.last))
       end
     end
 
@@ -63,8 +67,6 @@ RSpec.describe "Reviews", type: :request do
   end
 
   describe "PUT /recipes/:recipe_id/reviews/:id" do
-    let!(:review) { Review.create(content: "Great recipe!", rating: 5, recipe: recipe, user: user) }
-
     it "updates the review and redirects" do
       put recipe_review_path(recipe, review), params: {
         review: {
@@ -79,8 +81,6 @@ RSpec.describe "Reviews", type: :request do
   end
 
   describe "DELETE /recipes/:recipe_id/reviews/:id" do
-    let!(:review) { Review.create(content: "Great recipe!", rating: 5, recipe: recipe, user: user) }
-
     it "deletes the review" do
       expect {
         delete recipe_review_path(recipe, review)

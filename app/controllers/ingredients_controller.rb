@@ -5,7 +5,8 @@ class IngredientsController < ApplicationController
     @ingredients = Ingredient.all
   end
 
-  def show; end
+  def show
+  end
 
   def new
     @ingredient = Ingredient.new
@@ -20,7 +21,8 @@ class IngredientsController < ApplicationController
     end
   end
 
-  def edit; end
+  def edit
+  end
 
   def update
     if @ingredient.update(ingredient_params)
@@ -31,8 +33,12 @@ class IngredientsController < ApplicationController
   end
 
   def destroy
-    @ingredient.destroy
-    redirect_to ingredients_path, notice: "Ingredient was successfully deleted."
+    if @ingredient.recipes.exists?
+      redirect_to ingredients_path, alert: "Cannot delete ingredient still used in recipes."
+    else
+      @ingredient.destroy
+      redirect_to ingredients_path, notice: "Ingredient was successfully deleted."
+    end
   end
 
   private

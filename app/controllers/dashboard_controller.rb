@@ -1,5 +1,9 @@
 class DashboardController < ApplicationController
-    def index
-        @recipes = Recipe.where(user_id: current_user.id) if current_user
-    end
+  before_action :require_login
+
+  def index
+    @recipes = current_user.recipes
+    @favorites = current_user.favorites.includes(:recipe)
+    @reviews = current_user.reviews.includes(:recipe)
+  end
 end
