@@ -1,17 +1,21 @@
 class UsersController < ApplicationController
-  before_action :require_login, only: [ :edit, :update, :destroy ]
+  before_action :require_login, only: [ :index, :edit, :update, :destroy ]
+  before_action :redirect_if_logged_in, only: [ :new, :create ]
   before_action :set_user, only: [ :show, :edit, :update, :destroy ]
   before_action :authorize_user, only: [ :edit, :update, :destroy ]
 
   def index
-      @users = User.all
-  end
-
-  def show
+      redirect_to root_path, alert: "Access denied."
   end
 
   def new
     @user = User.new
+  end
+
+  def show
+    unless current_user == @user
+      redirect_to root_path, alert: "Access denied."
+    end
   end
 
   def create

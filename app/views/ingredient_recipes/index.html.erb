@@ -2,7 +2,7 @@
   <h1 class="page-title">Ingredient Usages</h1>
 
   <div class="button-row">
-    <%= link_to "Add Ingredient Usage", new_ingredient_recipe_path, class: "btn-primary" %>
+    <%= link_to "Add Ingredient Usage", new_recipe_ingredient_recipe_path(@ingredient_recipes.first.recipe), class: "btn-primary" %>
   </div>
 
   <% if @ingredient_recipes.present? %>
@@ -13,8 +13,8 @@
           <%= link_to ir.ingredient.name, ingredient_path(ir.ingredient), class: "btn-link" %>
           in <%= link_to ir.recipe.title, recipe_path(ir.recipe), class: "btn-link" %>
           <div class="button-row">
-            <%= link_to "Edit", edit_ingredient_recipe_path(ir), class: "btn-link" %>
-            <%= link_to "Delete", ingredient_recipe_path(ir), method: :delete, data: { confirm: "Are you sure?" }, class: "btn-danger" %>
+            <%= link_to "Edit", edit_recipe_ingredient_recipe_path(ir.recipe, ir), class: "btn-link" %>
+            <%= link_to "Delete", recipe_ingredient_recipe_path(ir.recipe, ir), method: :delete, data: { confirm: "Are you sure?" }, class: "btn-link" %>
           </div>
         </li>
       <% end %>

@@ -13,76 +13,96 @@ RSpec.describe "Recipes", type: :request do
     )
   end
 
-  before do
-    post login_path, params: { email: user.email, password: "password" }
-  end
-
-  describe "GET /recipes" do
-    it "shows the list of recipes" do
-      get recipes_path
-      expect(response).to have_http_status(:ok)
-      expect(response.body).to include("Chocolate Cake")
+  describe "when logged in as the recipe owner" do
+    before do
+      post login_path, params: { email: user.email, password: "password" }
     end
-  end
 
-  describe "GET /recipes/:id" do
-    it "shows a single recipe with reviews" do
-      get recipe_path(recipe)
-      expect(response).to have_http_status(:ok)
-      expect(response.body).to include("Chocolate Cake")
+    describe "GET /recipes" do
+      it "shows the list of recipes" do
+        get recipes_path
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include("Chocolate Cake")
+      end
     end
-  end
 
-  describe "GET /recipes/new" do
-    it "renders the new recipe form" do
-      get new_recipe_path
-      expect(response).to have_http_status(:ok)
+    describe "GET /recipes/:id" do
+      it "shows a single recipe with reviews" do
+        get recipe_path(recipe)
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include("Chocolate Cake")
+      end
     end
-  end
 
-  describe "POST /recipes" do
-    it "creates a new recipe" do
-      expect {
-        post recipes_path, params: {
-          recipe: {
-            title: "Tiramisu",
-            instructions: "Layer and chill.",
-            category_ids: [ category.id ]
+    describe "GET /recipes/new" do
+      it "renders the new recipe form" do
+        get new_recipe_path
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    describe "GET /recipes/:id/edit" do
+      it "renders the edit form for the owner" do
+        get edit_recipe_path(recipe)
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    describe "GET /recipes with filters" do
+      let!(:ingredient) { Ingredient.create!(name: "Sugar") }
+
+      before do
+        IngredientRecipe.create!(
+          recipe: recipe,
+          ingredient: ingredient,
+          quantity: 2,
+          unit: "cups"
+        )
+      end
+
+      it "filters by title, category, and ingredient" do
+        get recipes_path, params: { query: "cake", category_id: category.id, ingredient_id: ingredient.id }
+        expect(response.body).to include("Cake")
+      end
+    end
+
+    describe "POST /recipes" do
+      it "creates a new recipe" do
+        expect {
+          post recipes_path, params: {
+            recipe: {
+              title: "Tiramisu",
+              instructions: "Layer and chill.",
+              category_ids: [ category.id ]
+            }
           }
+        }.to change(Recipe, :count).by(1)
+
+        expect(response).to redirect_to(recipe_path(Recipe.last))
+        follow_redirect!
+        expect(response.body).to include("Tiramisu")
+      end
+    end
+
+    describe "PATCH /recipes/:id" do
+      it "updates the recipe" do
+        patch recipe_path(recipe), params: {
+          recipe: { title: "Updated Cake" }
         }
-      }.to change(Recipe, :count).by(1)
-
-      expect(response).to redirect_to(recipe_path(Recipe.last))
-      follow_redirect!
-      expect(response.body).to include("Tiramisu")
+        expect(response).to redirect_to(recipe_path(recipe))
+        follow_redirect!
+        expect(response.body).to include("Updated Cake")
+      end
     end
-  end
 
-  describe "GET /recipes/:id/edit" do
-    it "renders the edit form for the owner" do
-      get edit_recipe_path(recipe)
-      expect(response).to have_http_status(:ok)
-    end
-  end
+    describe "DELETE /recipes/:id" do
+      it "deletes the recipe" do
+        expect {
+          delete recipe_path(recipe)
+        }.to change(Recipe, :count).by(-1)
 
-  describe "PATCH /recipes/:id" do
-    it "updates the recipe" do
-      patch recipe_path(recipe), params: {
-        recipe: { title: "Updated Cake" }
-      }
-      expect(response).to redirect_to(recipe_path(recipe))
-      follow_redirect!
-      expect(response.body).to include("Updated Cake")
-    end
-  end
-
-  describe "DELETE /recipes/:id" do
-    it "deletes the recipe" do
-      expect {
-        delete recipe_path(recipe)
-      }.to change(Recipe, :count).by(-1)
-
-      expect(response).to redirect_to(recipes_path)
+        expect(response).to redirect_to(recipes_path)
+      end
     end
   end
 

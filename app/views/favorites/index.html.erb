@@ -1,19 +1,25 @@
 <div class="page-container">
   <h1 class="page-title">My Favorite Recipes</h1>
 
-  <%= link_to "Add To Favorites", new_favorite_path, class: "btn-primary" %>
-
   <% if @favorites.any? %>
     <ul class="item-list">
       <% @favorites.each do |favorite| %>
         <li class="item item--favorite">
-          <strong>Recipe:</strong> <%= link_to favorite.recipe.title, favorite_path(favorite), class: "recipe-link" %><br>
-          <small>By: <%= favorite.recipe.user.username %></small>
+          Recipe: 
+          <%= link_to favorite.recipe.title, recipe_path(favorite.recipe), class: "recipe-link" %>
+          <p>By: <%= favorite.recipe.user.username %></p>
+
+          <% if favorite.recipe.categories.any? %>
+            <div>
+              <p>Categories: 
+                <%= favorite.recipe.categories.map(&:name).join(", ") %>
+              </p>
+            </div>
+          <% end %>
 
           <div class="button-row">
-            <%= link_to "View", favorite_path(favorite), class: "btn-link" %>
-            <%= link_to "Edit", edit_favorite_path(favorite), class: "btn-link" %>
-            <%= link_to "Delete", favorite_path(favorite), method: :delete, data: { confirm: "Are you sure?" }, class: "btn-danger" %>
+            <%= link_to "View Recipe", recipe_path(favorite.recipe), class: "btn-link" %>
+            <%= link_to "Remove from Favorites", favorite_path(favorite), method: :delete, data: { confirm: "Are you sure?" }, class: "btn-link" %>
           </div>
         </li>
       <% end %>

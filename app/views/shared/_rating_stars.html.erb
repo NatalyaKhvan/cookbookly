@@ -1,0 +1,17 @@
+<% if rating.present? %>
+  <% filled_stars = rating.floor %>
+  <% half_star = (rating - filled_stars) >= 0.5 %>
+  <% empty_stars = 5 - filled_stars - (half_star ? 1 : 0) %>
+
+  <span class="stars" aria-hidden="true">
+    <% filled_stars.times do %>
+      <span class="star full">★</span>
+    <% end %>
+    <% if half_star %>
+      <span class="star half">★</span>
+    <% end %>
+    <% empty_stars.times do %>
+      <span class="star empty">★</span>
+    <% end %>
+  </span>
+<% end %>

@@ -4,9 +4,5 @@
 
   <div class="button-row">
     <%= link_to "Back", recipe_path(@recipe), class: "btn-link" %>
-
-    <% if @recipe.user == current_user %>
-      <%= button_to "Delete", recipe_path(@recipe), method: :delete, data: { confirm: "Are you sure?" }, class: "btn-danger" %>
-    <% end %>
   </div>
 </div>

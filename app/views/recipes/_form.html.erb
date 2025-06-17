@@ -13,7 +13,7 @@
     </div>
 
     <div class="form-group">
-      <%= form.label :category_ids, "Categories" %><br>
+      <%= form.label :category_ids, "Categories" %>
       <div class="checkbox-group">
         <%= form.collection_check_boxes :category_ids, @categories, :id, :name do |b| %>
           <div class="checkbox-option">
@@ -25,8 +25,31 @@
     </div>
 
     <div class="form-group">
-      <%= form.submit "Save Recipe", class: "btn-primary" %>
+      <%= form.submit(recipe.persisted? ? "Update Recipe" : "Create Recipe", class: "btn-primary") %>
+    </div>
+  <% end %>
+
+  <% if recipe.persisted? && recipe.user == current_user %>
+    <div class="ingredients-section">
+      <h3>Ingredients</h3>
+
+      <% if recipe.ingredient_recipes.any? %>
+        <ul>
+          <% recipe.ingredient_recipes.each do |ir| %>
+            <li>
+              <%= formatted_ingredient(ir) %>
+              <%= link_to "Edit", edit_recipe_ingredient_recipe_path(ir), class: "btn-link" %>
+              <%= link_to "Remove", recipe_ingredient_recipe_path(ir), method: :delete, data: { confirm: "Are you sure?" }, class: "btn-link" %>
+            </li>
+            <% end %>
+        </ul>
+      <% else %>
+        <p>No ingredients yet.</p>
+      <% end %>
+
+      <div>
+        <%= link_to "Add Ingredient", new_recipe_ingredient_recipe_path(recipe), class: "btn-primary" %>
+      </div>
     </div>
   <% end %>
 </div>
-

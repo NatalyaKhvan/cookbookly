@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_14_232947) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_02_215946) do
   create_table "categories", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
@@ -32,6 +32,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_14_232947) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["recipe_id"], name: "index_favorites_on_recipe_id"
+    t.index ["user_id", "recipe_id"], name: "index_favorites_on_user_id_and_recipe_id", unique: true
     t.index ["user_id"], name: "index_favorites_on_user_id"
   end
 
