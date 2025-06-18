@@ -1,0 +1,9 @@
+<div class="page-container">
+  <h1 class="page-title">Edit Ingredient Usage</h1>
+
+  <%= render "form", ingredient_recipe: @ingredient_recipe, ingredients: @ingredients, recipes: @recipes %>
+
+  <div class="button-row">
+    <%= link_to "Back", ingredient_recipes_path, class: "btn-link" %>
+  </div>
+</div>

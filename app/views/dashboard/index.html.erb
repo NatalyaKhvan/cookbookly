@@ -1,0 +1,52 @@
+<div class="page-container">
+  <h1 class="page-title">Dashboard</h1>
+
+  <div class="dashboard-grid">
+    <section class="dashboard-section">
+      <h2 class="section-title">Your Recipes</h2>
+      <% if @recipes.any? %>
+        <ul class="item-list">
+          <% @recipes.each do |recipe| %>
+            <li class="item item--recipe">
+              <%= link_to recipe.title, recipe_path(recipe), class: "item-link" %>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p>You haven’t added any recipes yet. <%= link_to "Create one", new_recipe_path, class: "btn-link" %></p>
+      <% end %>
+    </section>
+
+    <section class="dashboard-section">
+      <h2 class="section-title">Your Favorites</h2>
+      <% if @favorites.any? %>
+        <ul class="item-list">
+          <% @favorites.each do |favorite| %>
+            <li class="item item--favorite">
+              <%= link_to favorite.recipe.title, recipe_path(favorite.recipe), class: "item-link" %>
+              <span class="item-meta">By: <%= favorite.recipe.user.username %></span>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p>You have no favorites yet.</p>
+      <% end %>
+    </section>
+
+    <section class="dashboard-section">
+      <h2 class="section-title">Your Reviews</h2>
+      <% if @reviews.any? %>
+        <ul class="item-list">
+          <% @reviews.each do |review| %>
+            <li class="item item--review">
+              <%= link_to review.recipe.title, recipe_path(review.recipe), class: "item-link" %> – 
+              <%= truncate(review.content, length: 50) %>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p>You haven’t added any reviews yet.</p>
+      <% end %>
+    </section>
+  </div>
+</div>

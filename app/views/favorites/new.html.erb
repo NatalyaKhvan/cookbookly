@@ -1,0 +1,9 @@
+<div class="page-container">
+  <h1 class="page-title">New Favorite</h1>
+
+  <%= render "form", favorite: @favorite, recipes: @recipes %>
+
+  <div class="button-row">
+    <%= link_to "Back to Favorites", favorites_path, class: "btn-link" %>
+  </div>
+</div>

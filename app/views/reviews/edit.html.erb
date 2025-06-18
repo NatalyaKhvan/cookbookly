@@ -1,0 +1,9 @@
+<div class="page-container">
+  <h1 class="page-title">Edit Review for <%= @review.recipe.title %></h1>
+
+  <%= render "form", review: @review %>
+
+  <div class="button-row">
+    <%= link_to "Back to Recipe", recipe_path(@review.recipe), class: "btn-link" %>
+  </div>
+</div>

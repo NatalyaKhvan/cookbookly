@@ -1,0 +1,19 @@
+<div class="form-container">
+  <%= form_with(model: review, url: review.new_record? ? recipe_reviews_path(review.recipe) : recipe_review_path(review.recipe, review), method: review.new_record? ? :post : :patch, local: true) do |form| %>
+    <%= render 'shared/form_errors', object: review %>
+
+    <div class="form-group">
+      <%= form.label :rating %>
+      <%= form.number_field :rating, min: 1, max: 5, class: "form-control" %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :content %>
+      <%= form.text_area :content, class: "form-control" %>
+    </div>
+
+    <div class="form-group">
+      <%= form.submit(review.persisted? ? "Update Review" : "Post Review", class: "btn-primary") %>
+    </div>
+  <% end %>
+</div>

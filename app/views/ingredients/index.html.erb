@@ -1,0 +1,19 @@
+<div class="page-container">
+  <h1 class="page-title">Ingredients</h1>
+
+  <div class="button-row">
+    <%= link_to "New Ingredient", new_ingredient_path, class: "btn-primary" %>
+  </div>
+
+  <ul class="item-list">
+    <% @ingredients.each do |ingredient| %>
+      <li class="item item--ingredient">
+        <strong><%= link_to ingredient.name, ingredient_path(ingredient), class: "btn-link" %></strong>
+        <div class="button-row">
+          <%= link_to "Edit", edit_ingredient_path(ingredient), class: "btn-link" %>
+          <%= link_to "Delete", ingredient_path(ingredient), method: :delete, data: { confirm: "Are you sure?" }, class: "btn-danger" %>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+</div>

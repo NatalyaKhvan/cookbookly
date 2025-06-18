@@ -1,0 +1,9 @@
+<div class="page-container">
+  <h1 class="page-title">New Recipe</h1>
+
+  <%= render "form", recipe: @recipe %>
+
+  <div class="button-row">
+    <%= link_to "Back to All Recipes", recipes_path, class: "btn-link" %>
+  </div>
+</div>
