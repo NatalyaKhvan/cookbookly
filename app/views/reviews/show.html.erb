@@ -1,13 +1,18 @@
 <div class="page-container review-detail">
   <h1 class="page-title">Review for <%= @review.recipe.title %></h1>
 
-  <p><strong>Rating:</strong> <%= @review.rating %></p>
-  <p><strong>Reviewed by:</strong> <%= @review.user.username %></p>
+  <p>Rating: <%= render "shared/rating_stars", rating: @review.rating %></p>
+  <p>Reviewed by: <%= @review.user.username %></p>
   <p><%= @review.content %></p>
 
   <div class="button-row">
-    <%= link_to "Edit", edit_recipe_review_path(@review.recipe, @review), class: "btn-link" %>
-    <%= link_to "Delete", recipe_review_path(@review.recipe, @review), method: :delete, data: { confirm: "Are you sure?" }, class: "btn-danger" %>
-    <%= link_to "Back to Recipe", recipe_path(@review.recipe), class: "btn-link" %>
+    <p><%= link_to "Back to All Reviews", recipe_reviews_path(@review.recipe), class: "btn-link" %></p>
+
+    <% if @review.user == current_user %>
+      <p><%= link_to "Edit", edit_recipe_review_path(@review.recipe, @review), class: "btn-link" %></p>
+      <p><%= link_to "Delete", recipe_review_path(@review.recipe, @review), method: :delete, data: { confirm: "Are you sure?" }, class: "btn-link" %></p>
+    <% end %>
+
+    <p><%= link_to "Back to Recipe", recipe_path(@review.recipe), class: "btn-link" %></p>
   </div>
 </div>

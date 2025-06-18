@@ -10,7 +10,7 @@
           <% if current_user %>
             <div class="button-row">
               <%= link_to "Edit", edit_category_path(category), class: "btn-link" %>
-              <%= link_to "Delete", category_path(category), method: :delete, data: { confirm: "Are you sure?" }, class: "btn-danger" %>
+              <%= link_to "Delete", category_path(category), method: :delete, data: { confirm: "Are you sure?" }, class: "btn-link" %>
             </div>
           <% end %>
         </div>

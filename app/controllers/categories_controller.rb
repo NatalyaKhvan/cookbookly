@@ -1,5 +1,6 @@
 class CategoriesController < ApplicationController
   before_action :set_category, only: [ :show, :edit, :update, :destroy ]
+  before_action :require_login, except: [ :index, :show ]
 
   def index
     @categories = Category.all
@@ -14,7 +15,6 @@ class CategoriesController < ApplicationController
   end
 
   def edit
-    # @category is already set by before_action
   end
 
   def create
@@ -35,8 +35,12 @@ class CategoriesController < ApplicationController
   end
 
   def destroy
-    @category.destroy
-    redirect_to categories_url, notice: "Category was successfully deleted."
+    if @category.recipes.exists?
+      redirect_to categories_url, alert: "Cannot delete category assigned to recipes."
+    else
+      @category.destroy
+      redirect_to categories_url, notice: "Category was successfully deleted."
+    end
   end
 
   private

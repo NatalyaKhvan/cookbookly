@@ -16,13 +16,18 @@ Rails.application.routes.draw do
   # Recipes and nested reviews
   resources :recipes do
     resources :reviews
+    resources :ingredient_recipes, only: [ :new, :create, :edit, :update, :destroy ]
   end
 
   # Other resources
   resources :categories
   resources :ingredients
-  resources :favorites
-  resources :ingredient_recipes
+
+  # Favorites routes for index and destroy
+  resources :favorites, only: [ :index, :destroy ]
+
+  # Favorites routes (explicit)
+  post "/recipes/:recipe_id/favorite", to: "favorites#create", as: :favorite_recipe
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   get "up" => "rails/health#show", as: :rails_health_check

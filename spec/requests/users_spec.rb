@@ -1,26 +1,37 @@
 require 'rails_helper'
 
 RSpec.describe "Users", type: :request do
-    let!(:user) { User.create!(username: "testuser", email: "test@example.com", password: "password",
-    password_confirmation: "password") }
+  let!(:user) do
+    User.create!(
+      username: "testuser",
+      email: "test@example.com",
+      password: "password",
+      password_confirmation: "password"
+    )
+  end
 
   describe "GET /users" do
-    it "returns a successful response" do
+    before { post login_path, params: { email: user.email, password: "password" } }
+
+    it "redirects to root with access denied alert" do
       get users_path
-      expect(response).to have_http_status(:ok)
-      expect(response.body).to include("testuser")
+      expect(response).to have_http_status(:found)
+      expect(response).to redirect_to(root_path)
+      expect(flash[:alert]).to eq("Access denied.")
     end
   end
 
   describe "GET /users/:id" do
+    before { post login_path, params: { email: user.email, password: "password" } }
+
     it "shows the user" do
       get user_path(user)
       expect(response).to have_http_status(:ok)
       expect(response.body).to include("testuser")
     end
 
-    it "returns 404 when no user exists" do
-      get user_path(id: 999999)
+    it "raises ActiveRecord::RecordNotFound when user does not exist" do
+      get user_path(id: 999_999)
       expect(response).to have_http_status(:not_found)
     end
   end
@@ -33,57 +44,62 @@ RSpec.describe "Users", type: :request do
   end
 
   describe "POST /users" do
-    it "creates a new user with valid data" do
-      expect {
-        post users_path, params: {
-          user: {
-            username: "newuser",
-            email: "new@example.com",
-            password: "password",
-            password_confirmation: "password"
+    context "with valid data" do
+      it "creates a new user and redirects to root" do
+        expect {
+          post users_path, params: {
+            user: {
+              username: "newuser",
+              email: "new@example.com",
+              password: "password",
+              password_confirmation: "password"
+            }
           }
-        }
-      }.to change(User, :count).by(1)
-      expect(response).to redirect_to(root_path)
+        }.to change(User, :count).by(1)
+        expect(response).to redirect_to(root_path)
+      end
     end
 
-    it "renders :new with invalid data" do
-      post users_path, params: {
-        user: {
-          username: "",
-          email: "bad",
-          password: "pass",
-          password_confirmation: "no_match"
+    context "with invalid data" do
+      it "renders :new with unprocessable_entity status" do
+        post users_path, params: {
+          user: {
+            username: "",
+            email: "bademail",
+            password: "pass",
+            password_confirmation: "no_match"
+          }
         }
-      }
-      expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.body).to include("error")
+      end
     end
   end
 
   describe "PATCH /users/:id" do
     before { post login_path, params: { email: user.email, password: "password" } }
 
-    it "updates the user with valid data" do
-      patch user_path(user), params: {
-        user: { username: "updateduser" }
-      }
-      expect(response).to redirect_to(user_path(user))
-      follow_redirect!
-      expect(response.body).to include("updateduser")
+    context "with valid data" do
+      it "updates the user and redirects to user show page" do
+        patch user_path(user), params: { user: { username: "updateduser" } }
+        expect(response).to redirect_to(user_path(user))
+        follow_redirect!
+        expect(response.body).to include("updateduser")
+      end
     end
 
-    it "renders :edit with invalid data" do
-      patch user_path(user), params: {
-        user: { username: "" }
-      }
-      expect(response).to have_http_status(:unprocessable_entity)
+    context "with invalid data" do
+      it "renders :edit with unprocessable_entity status" do
+        patch user_path(user), params: { user: { username: "" } }
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
     end
   end
 
   describe "DELETE /users/:id" do
     before { post login_path, params: { email: user.email, password: "password" } }
 
-    it "deletes the user" do
+    it "deletes the user and redirects to root" do
       expect {
         delete user_path(user)
       }.to change(User, :count).by(-1)

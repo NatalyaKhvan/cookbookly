@@ -4,6 +4,14 @@
   <%= render "form", ingredient: @ingredient %>
 
   <div class="button-row">
-    <%= link_to "Back to Ingredients", ingredients_path, class: "btn-link" %>
+    <% safe_return_to = nil %>
+    <% safe_return_to = @return_to if @return_to&.start_with?("/") %>
+    <%= link_to "Back", safe_return_to || ingredients_path, class: "btn-link", title: "Go back to previous page" %>
+
+    <% if @return_to_recipe_path %>
+      <%= link_to "Back to Recipe", @return_to_recipe_path, class: "btn-link" %>
+    <% end %>
+
+    <%= link_to "View All Ingredients", ingredients_path, class: "btn-link" %>
   </div>
 </div>

@@ -14,7 +14,7 @@
   </p>
 
   <div class="button-row">
-    <%= link_to "Edit", edit_ingredient_recipe_path(@ingredient_recipe), class: "btn-link" %>
-    <%= link_to "Back", ingredient_recipes_path, class: "btn-link" %>
+    <%= link_to "Edit", edit_recipe_ingredient_recipe_path(@ingredient_recipe.recipe, @ingredient_recipe), class: "btn-link" %>
+    <%= link_to "Back", recipe_ingredient_recipes_path(@ingredient_recipe.recipe), class: "btn-link" %>
   </div>
 </div>

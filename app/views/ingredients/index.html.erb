@@ -7,13 +7,18 @@
 
   <ul class="item-list">
     <% @ingredients.each do |ingredient| %>
-      <li class="item item--ingredient">
-        <strong><%= link_to ingredient.name, ingredient_path(ingredient), class: "btn-link" %></strong>
-        <div class="button-row">
+      <li class="item ingredient-row">
+        <div class="ingredient-name">
+          <%= link_to ingredient.name, ingredient_path(ingredient), class: "item-link" %>
+        </div>
+        <div class="ingredient-actions">
           <%= link_to "Edit", edit_ingredient_path(ingredient), class: "btn-link" %>
-          <%= link_to "Delete", ingredient_path(ingredient), method: :delete, data: { confirm: "Are you sure?" }, class: "btn-danger" %>
+          <%= link_to "Delete", ingredient_path(ingredient), method: :delete, data: { confirm: "Are you sure?" }, class: "btn-link" %>
         </div>
       </li>
     <% end %>
   </ul>
+  <div class="button-row">
+    <%= link_to "Back", request.referer || root_path, class: "btn-link" %>
+  </div>
 </div>

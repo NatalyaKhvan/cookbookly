@@ -7,6 +7,8 @@
       <%= form.text_field :name, class: "form-control" %>
     </div>
 
+    <%= hidden_field_tag :return_to_recipe_id, params[:return_to_recipe_id] if params[:return_to_recipe_id].present? %>
+
     <div class="form-group">
       <%= form.submit class: "btn-primary" %>
     </div>

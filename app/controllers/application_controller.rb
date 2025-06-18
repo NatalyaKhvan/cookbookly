@@ -19,4 +19,10 @@ class ApplicationController < ActionController::Base
       redirect_to login_path, alert: "Please log in first" and return
     end
   end
+
+  def redirect_if_logged_in
+    if user_signed_in?
+      redirect_to dashboard_path, alert: "You are already logged in." and return
+    end
+  end
 end

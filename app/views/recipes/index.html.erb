@@ -1,25 +1,32 @@
 <div class="main-container">
   <h1 class="page-title">All Recipes</h1>
 
+  <%= form_tag recipes_path, method: :get, class: "search-form" do %>
+    <%= text_field_tag :query, params[:query], placeholder: "Search by title..." %>
+
+    <%= select_tag :category_id,
+          options_from_collection_for_select(Category.all, :id, :name, params[:category_id]),
+          include_blank: "All Categories" %>
+
+    <%= select_tag :ingredient_id,
+          options_from_collection_for_select(Ingredient.all, :id, :name, params[:ingredient_id]),
+          include_blank: "All Ingredients" %>
+
+    <%= submit_tag "Search", class: "btn-primary" %>
+  <% end %>
+
   <% if @recipes.any? %>
     <div class="recipe-grid">
-      <% @recipes.each do |recipe| %>
-        <div class="recipe-card">
-          <%= link_to recipe.title, recipe_path(recipe), class: "recipe-link" %>
-          <p class="recipe-author">By: <%= recipe.user.username %></p>
-          <p class="recipe-summary"><%= truncate(recipe.instructions, length: 100) %></p>
-
-          <% if recipe.user == current_user %>
-            
-            <%= link_to "Delete", recipe_path(recipe), method: :delete, class: "btn-link", data: { confirm: "Are you sure?" } %>
-          <% end %>
-        </div>
-      <% end %>
+      <%= render partial: "recipes/recipe_card", collection: @recipes, as: :recipe %>
     </div>
   <% else %>
     <p class="no-recipes-message">
-      You haven’t added any recipes yet.
-      <%= link_to "Create one", new_recipe_path, class: "btn-link" %>
+      <% if params[:query].present? %>
+        No recipes found for "<%= params[:query] %>".
+      <% else %>
+        You haven’t added any recipes yet.
+        <%= link_to "Create one", new_recipe_path, class: "btn-link" %>
+      <% end %>
     </p>
   <% end %>
 

@@ -7,7 +7,7 @@
       <% @ingredient.recipes.each do |recipe| %>
         <li class="recipe-item">
           <%= link_to recipe.title, recipe_path(recipe), class: "recipe-link" %>
-          <small>By: <%= recipe.user.username %></small>
+          By: <%= recipe.user.username %>
         </li>
       <% end %>
     </ul>

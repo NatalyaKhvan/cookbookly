@@ -1,9 +1,17 @@
 <div class="page-container">
-  <h1 class="page-title">New Ingredient Usage</h1>
+  <h1 class="page-title">Add Ingredient to Recipe</h1>
+
+  <div class="info-note">
+    <p>Select an ingredient from the list.</p>
+    <p>If it’s not listed, you can
+      <%= link_to "➕ add a new ingredient", new_ingredient_path(return_to_recipe_id: @ingredient_recipe.recipe.id), class: "btn-primary" %>
+    </p>
+
+  </div>
 
   <%= render "form", ingredient_recipe: @ingredient_recipe, ingredients: @ingredients, recipes: @recipes %>
 
   <div class="button-row">
-    <%= link_to "Back", ingredient_recipes_path, class: "btn-link" %>
+    <%= link_to "Back to Recipe", recipe_path(@ingredient_recipe.recipe || @recipes.first), class: "btn-link", title: "Go back to the recipe" %>
   </div>
 </div>

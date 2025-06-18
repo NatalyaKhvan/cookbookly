@@ -1,50 +1,89 @@
 <div class="page-container recipe-detail">
   <h1 class="page-title"><%= @recipe.title %></h1>
-  <p>By: <%= @recipe.user.username %></p>
-  <p><%= @recipe.instructions %></p>
+  <p>By: <%= @recipe.user&.username || "Unknown" %></p>
 
-  <h3>Categories:</h3>
-  <ul class="category-list">
-    <% @recipe.categories.each do |category| %>
-      <li><%= category.name %></li>
-    <% end %>
-  </ul>
-
-  <% if current_user %>
-    <% if current_user.favorites.exists?(recipe_id: @recipe.id) %>
-      <%= link_to "Remove from Favorites", favorite_path(current_user.favorites.find_by(recipe_id: @recipe.id)), method: :delete, data: { confirm: "Remove from favorites?" }, class: "btn-link" %>
+  <h3 class="average-rating">
+    <% if @recipe.reviews.any? %>
+      <%= render "shared/rating_stars", rating: @recipe.average_rating %>
+      <span class="review-count">
+        (<%= @recipe.reviews.count %> <%= "review".pluralize(@recipe.reviews.count) %>)
+      </span>
+      <div class="all-reviews-link">
+        <%= link_to "View All Reviews", recipe_reviews_path(@recipe), class: "btn-link" %>
+      </div>
     <% else %>
-      <%= link_to "Add to Favorites", favorites_path(recipe_id: @recipe.id), method: :post, class: "btn-link" %>
+      <p class="section-content">No reviews yet.</p>
     <% end %>
+  </h3>
+
+  <div class="ingredients-section">
+    <h3>Ingredients:</h3>
+
+    <% if @recipe.ingredient_recipes.any? %>
+      <div class="section-content">
+        <% @recipe.ingredient_recipes.each do |ir| %>
+          <p>
+            <%= "#{ir.quantity.present? ? ir.quantity : ''} #{ir.unit.present? ? ir.unit : ''} #{ir.ingredient.name}" %>
+            <% if current_user == @recipe.user %>
+              <%= link_to "Edit", edit_recipe_ingredient_recipe_path(@recipe, ir), class: "btn-link" %>
+              <%= link_to "Remove", recipe_ingredient_recipe_path(@recipe, ir), method: :delete, data: { confirm: "Are you sure?" }, class: "btn-link" %>
+            <% end %>
+          </p>
+        <% end %>
+      </div>
+    <% else %>
+      <% if current_user == @recipe.user %>
+        <div class="flash alert friendly-message">
+          <p>Please complete your recipe by adding ingredients.</p>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <% if current_user == @recipe.user %>
+    <div class="add-ingredients-link">
+      <%= link_to "Add ingredient", new_recipe_ingredient_recipe_path(@recipe), class: "btn-primary" %>
+    </div>
+      <p>You can manage all your ingredients <%= link_to "here", ingredients_path, class: "btn-link" %>.</p>
   <% end %>
 
-  <% if @recipe.user == current_user %>
+  <% if current_user == @recipe.user %>
     <div class="button-row">
-      <%= link_to "Edit Recipe", edit_recipe_path(@recipe), class: "btn-link" %>
-      <%= link_to "Delete Recipe", recipe_path(@recipe), method: :delete, data: { confirm: "Are you sure?" }, class: "btn-danger" %>
+      <%= link_to "Edit Recipe", edit_recipe_path(@recipe), class: "btn-primary" %>
+      <%= link_to "Delete Recipe", recipe_path(@recipe), method: :delete, data: { confirm: "Are you sure?" }, class: "btn-primary" %>
     </div>
   <% end %>
 
-  <div class="reviews-section">
-    <h2>Reviews</h2>
-    <% if @reviews.any? %>
-      <% @reviews.each do |review| %>
-        <div class="review-card">
-          <p><strong>Rating:</strong> <%= review.rating %></p>
-          <p><%= review.content %></p>
-
-          <% if review.user == current_user %>
-            <%= link_to "Edit", edit_recipe_review_path(@recipe, review), class: "btn-link" %>
-            <%= link_to "Delete", recipe_review_path(@recipe, review), method: :delete, data: { confirm: "Are you sure?" }, class: "btn-link" %>
-          <% end %>
-        </div>
-      <% end %>
-    <% else %>
-      <p>No reviews yet. Be the first to add one!</p>
-    <% end %>
-
-    <%= link_to "Add a Review", new_recipe_review_path(@recipe), class: "btn-primary" %>
+  <div class="instructions-section">
+    <h3>Instructions:</h3>
+    <p><%= simple_format(@recipe.instructions) %></p>
   </div>
 
-  <%= link_to "Back", recipes_path, class: "btn-link" %>
+  <% if current_user && current_user != @recipe.user %>
+    <div class="add-review-btn">
+      <% if current_user.favorited?(@recipe) %>
+        <%= button_to "Remove from Favorites", favorite_path(current_user.favorite_for(@recipe)), method: :delete, class: "btn-primary" %>
+      <% else %>
+        <%= button_to "Add to Favorites", favorite_recipe_path(@recipe), method: :post, class: "btn-primary" %>
+      <% end %>
+    </div>
+
+    <% user_review = @recipe.reviews.find_by(user_id: current_user.id) %>
+
+    <% if user_review %>
+      <div class="add-review-btn">
+        <%= link_to "Edit Your Review", edit_recipe_review_path(@recipe, user_review), class: "btn-primary" %>
+        <%= link_to "Delete Review", recipe_review_path(@recipe, user_review), method: :delete, data: { confirm: "Are you sure?" }, class: "btn-primary"%>
+      </div>
+    <% else %>
+      <div class="add-review-btn">
+        <%= link_to "Add a Review", new_recipe_review_path(@recipe), class: "btn-primary" %>
+      </div>
+    <% end %>
+
+  <% end %>
+
+  <div class="button-row">
+    <%= link_to "Back to All Recipes", recipes_path, class: "btn-link" %>
+  </div>
 </div>
