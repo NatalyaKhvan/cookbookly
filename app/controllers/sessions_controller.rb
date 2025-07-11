@@ -1,6 +1,7 @@
 class SessionsController < ApplicationController
+  before_action :redirect_if_logged_in, only: [ :new, :create ]
+
   def new
-    # renders login form
   end
 
   def create
@@ -17,7 +18,7 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    session[:user_id] = nil
+    session.delete(:user_id)
     redirect_to root_path, notice: "Logged out successfully"
   end
 end

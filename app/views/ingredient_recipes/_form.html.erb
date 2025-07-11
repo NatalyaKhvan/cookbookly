@@ -1,16 +1,21 @@
 <div class="form-container">
-  <%= form_with(model: ingredient_recipe, local: true) do |form| %>
+  <%= form_with(model: [ingredient_recipe.recipe, ingredient_recipe], local: true) do |form| %>
     <%= render 'shared/form_errors', object: ingredient_recipe %>
 
     <div class="form-group">
-      <%= form.label :ingredient_id %>
-      <%= form.collection_select :ingredient_id, @ingredients, :id, :name, prompt: "Select Ingredient", class: "form-control" %>
+      <%= form.label :ingredient_id, "Ingredient" %>
+      <%= form.collection_select :ingredient_id, @ingredients, :id, :name, prompt: "Select an ingredient", class: "form-control" %>
     </div>
 
-    <div class="form-group">
-      <%= form.label :recipe_id %>
-      <%= form.collection_select :recipe_id, @recipes, :id, :title, prompt: "Select Recipe", class: "form-control" %>
-    </div>
+    <%# If recipe_id is already set (prefilled), just use hidden field %>
+    <% if ingredient_recipe.recipe_id.present? %>
+      <%= form.hidden_field :recipe_id %>
+    <% else %>
+      <div class="form-group">
+        <%= form.label :recipe_id %>
+        <%= form.collection_select :recipe_id, @recipes, :id, :title, prompt: "Select Recipe", class: "form-control" %>
+      </div>
+    <% end %>
 
     <div class="form-group">
       <%= form.label :quantity %>

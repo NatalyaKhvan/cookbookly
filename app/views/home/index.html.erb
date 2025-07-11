@@ -31,8 +31,20 @@
         <% @recipes.each do |recipe| %>
           <div class="recipe-card">
             <%= link_to recipe.title, recipe_path(recipe), class: "recipe-link" %>
+
+            <% if recipe.average_rating.to_f > 0 %>
+              <div class="average-rating">
+                <%= render "shared/rating_stars", rating: recipe.average_rating %>
+                <span class="numeric-rating"><%= number_with_precision(recipe.average_rating, precision: 1) %> / 5</span>
+              </div>
+            <% else %>
+              <div class="average-rating">
+                <p>No ratings yet</p>
+              </div>
+            <% end %>
+
             <p class="recipe-summary"><%= truncate(recipe.instructions, length: 100) %></p>
-          </div>
+        </div>
         <% end %>
       </div>
     <% else %>

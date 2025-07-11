@@ -1,15 +1,21 @@
 class RecipesController < ApplicationController
-  before_action :require_login
+  before_action :require_login, except: [ :index, :show ]
   before_action :set_recipe, only: [ :show, :edit, :update, :destroy ]
   before_action :set_categories, only: [ :new, :edit, :create, :update ]
   before_action :authorize_user!, only: [ :edit, :update, :destroy ]
 
   def index
     @recipes = Recipe.all
+    @recipes = @recipes.search_by_title(params[:query])
+                     .by_category(params[:category_id])
+                     .by_ingredient(params[:ingredient_id])
+                     .distinct
   end
 
   def show
-    @reviews = @recipe.reviews.includes(:user)
+    @reviews = @recipe.reviews.includes(:user).order(created_at: :desc).limit(3)
+    @ingredients = Ingredient.all.order(:name)
+    @user_review = @recipe.reviews.find_by(user_id: current_user.id) if current_user
   end
 
   def new
@@ -37,8 +43,11 @@ class RecipesController < ApplicationController
   end
 
   def destroy
-    @recipe.destroy
-    redirect_to recipes_path, notice: "Recipe was successfully deleted."
+    if @recipe.destroy
+      redirect_to recipes_path, notice: "Recipe was successfully deleted."
+    else
+      redirect_to recipes_path, alert: @recipe.errors.full_messages.to_sentence
+    end
   end
 
   private
@@ -52,7 +61,9 @@ class RecipesController < ApplicationController
   end
 
   def recipe_params
-    params.require(:recipe).permit(:title, :instructions, category_ids: [])
+    params.require(:recipe).permit(
+      :title, :instructions, category_ids: []
+    )
   end
 
   def authorize_user!

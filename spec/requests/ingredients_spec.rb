@@ -2,6 +2,11 @@ require 'rails_helper'
 
 RSpec.describe "Ingredients", type: :request do
   let!(:ingredient) { Ingredient.create!(name: "Sugar") }
+  let!(:user) { User.create!(username: "tester", email: "test@example.com", password: "password") }
+
+  before do
+    post login_path, params: { email: user.email, password: "password" }
+  end
 
   describe "GET /ingredients" do
     it "returns a successful response" do
@@ -21,9 +26,11 @@ RSpec.describe "Ingredients", type: :request do
     end
 
     context "when ingredient does not exist" do
-      it "returns a not found error" do
+      it "redirects to index with alert" do
         get ingredient_path(id: 999999)
-        expect(response).to have_http_status(:not_found)
+        expect(response).to redirect_to(ingredients_path)
+        follow_redirect!
+        expect(response.body).to include("Ingredient not found.")
       end
     end
   end
@@ -48,7 +55,9 @@ RSpec.describe "Ingredients", type: :request do
         expect {
           post ingredients_path, params: { ingredient: { name: "Flour" } }
         }.to change(Ingredient, :count).by(1)
-        expect(response).to redirect_to(ingredient_path(Ingredient.last))
+        expect(response).to redirect_to(ingredients_path)
+        follow_redirect!
+        expect(response.body).to include("Ingredient created!")
       end
     end
 
@@ -57,7 +66,7 @@ RSpec.describe "Ingredients", type: :request do
         expect {
           post ingredients_path, params: { ingredient: { name: "" } }
         }.not_to change(Ingredient, :count)
-        expect(response).to have_http_status(:unprocessable_entity).or have_http_status(:ok)
+        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
   end
@@ -90,19 +99,15 @@ RSpec.describe "Ingredients", type: :request do
           delete ingredient_path(extra_ingredient)
         }.to change(Ingredient, :count).by(-1)
         expect(response).to redirect_to(ingredients_path)
+        follow_redirect!
+        expect(response.body).to include("Ingredient was successfully deleted.")
       end
     end
 
     context "when ingredient is used in recipes" do
       it "does not delete and redirects with alert" do
-        user = User.create!(username: "chef", email: "chef@example.com", password: "password")
         recipe = Recipe.create!(title: "Cake", instructions: "Mix it.", user: user)
-        IngredientRecipe.create!(
-          recipe: recipe,
-          ingredient: ingredient,
-          quantity: 1,
-         unit: "tsp"
-        )
+        IngredientRecipe.create!(recipe: recipe, ingredient: ingredient, quantity: 1, unit: "tsp")
 
         expect {
           delete ingredient_path(ingredient)
